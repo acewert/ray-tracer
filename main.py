@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import math, sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 def makeVector(p1, p2, norm=False):
     return Vector(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z, norm)
@@ -28,7 +28,7 @@ def loadObj(filename):
 
     return polys
 
-class Render(QtGui.QWidget):
+class Render(QtWidgets.QWidget):
     def __init__(self, scene, cam):
         super(Render, self).__init__()
 
@@ -51,7 +51,7 @@ class Render(QtGui.QWidget):
                 # trace that ray and return a luminance
                 color = self.scene.trace(ray)
 
-                print 'Solved', x, y, color
+                print('Solved', x, y, color)
                 
                 qp.setPen(QtGui.QColor(color, color, color, 255))
                 qp.drawPoint(x, y)
@@ -284,17 +284,19 @@ class Camera(object):
 
         return Ray(po, pd - po)
 
-pos = (-10, 0.01, 1)
-rot = (math.radians(0), math.radians(0))
-ang = math.radians(60)
-res = (360, 360)
 
-cam = Camera(pos, rot, ang, res)
+if __name__ == '__main__':
+    pos = (-10, 0.01, 1)
+    rot = (math.radians(0), math.radians(0))
+    ang = math.radians(60)
+    res = (20, 20)
 
-polys = loadObj("soccerball.obj")
+    cam = Camera(pos, rot, ang, res)
 
-scene = Scene(polys)
+    polys = loadObj('assets/teapot.obj')
 
-app = QtGui.QApplication(sys.argv)
-render = Render(scene, cam)
-sys.exit(app.exec_())
+    scene = Scene(polys)
+
+    app = QtWidgets.QApplication(sys.argv)
+    render = Render(scene, cam)
+    sys.exit(app.exec_())
